@@ -1,10 +1,10 @@
 package com.luxand.facerecognition;
 
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,9 +35,7 @@ import com.luxand.FSDK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
-    {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int CAMERA_PERMISSION_REQUEST = 100;
 
     private Preview mPreview;
@@ -63,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             FSDK.Initialize();
             System.out.println("Inititialise");
 
-
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -87,18 +85,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showErrorAndClose("Error setting tracker parameters, position", errpos[0]);
             }
 
-            setContentView(mPreview); //creates MainActivity contents
-            addContentView(mDraw, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            setContentView(R.layout.activity_main);
 
+            Button registerButton = findViewById(R.id.registerButton);
+            Button recognizeButton = findViewById(R.id.recognizeButton);
 
-            // Menu
-            LayoutInflater inflater = (LayoutInflater)this.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-            View buttons = inflater.inflate(R.layout.bottom_menu, null );
-            buttons.findViewById(R.id.helpButton).setOnClickListener(this);
-            buttons.findViewById(R.id.clearButton).setOnClickListener(this);
-            addContentView(buttons, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            registerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                }
+            });
 
+            recognizeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setContentView(mPreview); //creates MainActivity contents
+                    addContentView(mDraw, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
+                    // Menu
+                    LayoutInflater inflater = (LayoutInflater)this.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                    View buttons = inflater.inflate(R.layout.bottom_menu, null );
+                    buttons.findViewById(R.id.helpButton).setOnClickListener(this);
+                    buttons.findViewById(R.id.clearButton).setOnClickListener(this);
+                    addContentView(buttons, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                }
+            });
         }
     }
 
@@ -113,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 })
                 .show();
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
