@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Lock orientation
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
@@ -65,10 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-            // Lock orientation
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-            // Camera layer and drawing layer
             mDraw = new ProcessImageAndDrawResults(this);
             mPreview = new Preview(this, mDraw);
             mDraw.mTracker = new FSDK.HTracker();
@@ -100,11 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             recognizeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setContentView(mPreview); //creates MainActivity contents
+                    setContentView(mPreview);
                     addContentView(mDraw, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
                     // Menu
-                    LayoutInflater inflater = (LayoutInflater)this.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View buttons = inflater.inflate(R.layout.bottom_menu, null );
                     buttons.findViewById(R.id.helpButton).setOnClickListener(this);
                     buttons.findViewById(R.id.clearButton).setOnClickListener(this);
